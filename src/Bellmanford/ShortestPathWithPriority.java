@@ -1,5 +1,3 @@
-package Bellmanford;
-
 import java.util.*;
 
 class Graph {
@@ -83,36 +81,40 @@ public class ShortestPathWithPriority {
         // Add edges to the graph
         graph.addEdge(0, 1, 6, 0);
         graph.addEdge(0, 2, 5, 10);
-        graph.addEdge(0, 3, 6, 0);
+        graph.addEdge(0, 3, 6, 5);
         graph.addEdge(1, 4, 1, 10);
-        graph.addEdge(2, 4, 3, 0);
-        graph.addEdge(2, 5, 3, 0);
-        graph.addEdge(2, 6, 5, 0);
+        graph.addEdge(2, 4, 3, 4);
+        graph.addEdge(2, 5, 3, 9);
+        graph.addEdge(2, 6, 5, 6);
         graph.addEdge(3, 5, 5, 10);
-        graph.addEdge(4, 5, 1, 0);
-        graph.addEdge(4, 6, 1, 0);
+        graph.addEdge(4, 5, 1, 8);
+        graph.addEdge(4, 6, 1, 4);
+        graph.addEdge(5, 6, 3, 5);
         graph.addEdge(5, 7, 6, 10);
-        graph.addEdge(6, 7, 2, 0);
+        graph.addEdge(6, 7, 2, 3);
 
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             // Prompt the user to enter the source vertex
             System.out.print("Enter the source vertex (or -1 to exit): ");
-            int source = scanner.nextInt();
+            String source = scanner.next();
 
-            if (source == -1) {
+            if (source.equals("-1")) {
                 break;
             }
 
             // Prompt the user to enter the destination vertex
             System.out.print("Enter the destination vertex: ");
-            int destination = scanner.nextInt();
+            String destination = scanner.next();
+
+            int sourceIndex = source.charAt(0) - 'A';
+            int destinationIndex = destination.charAt(0) - 'A';
 
             // Find the shortest path from the source to the destination
             List<Integer> path;
             try {
-                path = graph.shortestPath(source, destination);
+                path = graph.shortestPath(sourceIndex, destinationIndex);
 
                 // Calculate the total cost of the shortest path
                 int totalCost = 0;
@@ -133,13 +135,14 @@ public class ShortestPathWithPriority {
                 } else {
                     System.out.println("Shortest path from vertex " + source + " to vertex " + destination + ":");
                     for (int vertex : path) {
-                        System.out.print(vertex + " ");
+                        char vertexChar = (char) (vertex + 'A');
+                        System.out.print(vertexChar + " ");
                     }
                     System.out.println();
                     System.out.println("Total cost: " + totalCost);
                 }
             } catch (RuntimeException e) {
-                System.out.println("Negative-weight cycle detected. Cannot find shortest path.");
+                System.out.println("Negative-weight cycle detected. Cannot find the shortest path.");
             }
 
             System.out.println();
