@@ -21,7 +21,7 @@ class Graph {
         adjacencyList[source].add(new Edge(destination, weight, priority));
     }
 
-    List<Integer> shortestPath(int source, int destination) {
+    List<Character> shortestPath(char source, char destination) {
         // Priority queue to store nodes with the minimum distance
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));
 
@@ -34,9 +34,10 @@ class Graph {
         Arrays.fill(previous, -1);
 
         // Set the distance and priority of the source node to 0
-        distances[source] = 0;
-        priorities[source] = 0;
-        priorityQueue.offer(new Node(source, 0, 0));
+        int sourceIndex = source - 'A'; // Convert char to index
+        distances[sourceIndex] = 0;
+        priorities[sourceIndex] = 0;
+        priorityQueue.offer(new Node(sourceIndex, 0, 0));
 
         // Dijkstra's algorithm for finding the shortest path
         while (!priorityQueue.isEmpty()) {
@@ -44,7 +45,7 @@ class Graph {
             int current = node.vertex;
 
             // If we have reached the destination node, exit the loop
-            if (current == destination) {
+            if (current == destination - 'A') { // Convert char to index
                 break;
             }
 
@@ -71,10 +72,10 @@ class Graph {
         }
 
         // Build the shortest path by backtracking from the destination node
-        List<Integer> path = new ArrayList<>();
-        int current = destination;
+        List<Character> path = new ArrayList<>();
+        int current = destination - 'A'; // Convert index to char
         while (current != -1) {
-            path.add(current);
+            path.add((char) (current + 'A')); // Convert index to char
             current = previous[current];
         }
         Collections.reverse(path);
@@ -133,24 +134,24 @@ public class ShortestPathWithPriority {
         while (true) {
             // Prompt the user to enter the source vertex
             System.out.print("Enter the source vertex (or -1 to exit): ");
-            int source = scanner.nextInt();
+            char source = scanner.next().charAt(0);
 
-            if (source == -1) {
+            if (source == 'x' || source == 'X') {
                 break;
             }
 
             // Prompt the user to enter the destination vertex
             System.out.print("Enter the destination vertex: ");
-            int destination = scanner.nextInt();
+            char destination = scanner.next().charAt(0);
 
             // Find the shortest path from the source to the destination
-            List<Integer> path = graph.shortestPath(source, destination);
+            List<Character> path = graph.shortestPath(source, destination);
 
             // Calculate the total cost of the shortest path
             int totalCost = 0;
             for (int i = 0; i < path.size() - 1; i++) {
-                int current = path.get(i);
-                int next = path.get(i + 1);
+                int current = path.get(i) - 'A'; // Convert char to index
+                int next = path.get(i + 1) - 'A'; // Convert char to index
                 for (Graph.Edge edge : graph.adjacencyList[current]) {
                     if (edge.destination == next) {
                         totalCost += edge.weight;
@@ -164,7 +165,7 @@ public class ShortestPathWithPriority {
                 System.out.println("No path found from vertex " + source + " to vertex " + destination);
             } else {
                 System.out.println("Shortest path from vertex " + source + " to vertex " + destination + ":");
-                for (int vertex : path) {
+                for (char vertex : path) {
                     System.out.print(vertex + " ");
                 }
                 System.out.println();
